@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * 套餐菜品关系
@@ -15,7 +16,7 @@ import java.math.BigDecimal;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SetmealDish implements Serializable {
+public class SetmealDish implements Serializable{
 
     private static final long serialVersionUID = 1L;
 
