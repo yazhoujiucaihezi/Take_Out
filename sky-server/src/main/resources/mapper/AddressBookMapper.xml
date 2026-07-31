@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sky.mapper.AddressBookMapper">
+    <insert id="add">
+        insert into sky_take_out.address_book (user_id,consignee, sex, phone,
+                                               province_name, city_name, district_name, detail, label)
+        values (#{userId},#{consignee},#{sex},#{phone},
+                #{provinceName},#{cityName},#{districtName},#{detail},#{label})
+    </insert>
+
+    <update id="updateIsDefaultByUserId">
+        update address_book
+        set is_default = 0
+        where user_id = #{userId}
+    </update>
+
+    <update id="update">
+    update address_book
+        <set>
+            <if test="consignee != null"> consignee = #{consignee}, </if>
+            <if test="sex != null"> sex = #{sex}, </if>
+            <if test="phone != null"> phone = #{phone}, </if>
+            <if test="detail != null"> detail = #{detail}, </if>
+            <if test="label != null"> label = #{label}, </if>
+            <if test="isDefault != null"> is_default = #{isDefault}, </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id="list" resultType="com.sky.entity.AddressBook">
+        select * from address_book
+        <where>
+            <if test="userId != null">
+                and user_id = #{userId}
+            </if>
+            <if test="consignee != null">
+                and consignee = #{consignee}
+            </if>
+            <if test="sex != null">
+                and sex = #{sex}
+            </if>
+            <if test="phone != null">
+                and phone = #{phone}
+            </if>
+            <if test="provinceCode != null">
+                and province_code = #{provinceCode}
+            </if>
+            <if test="provinceName != null">
+                and province_name = #{provinceName}
+            </if>
+            <if test="cityCode != null">
+                and city_code = #{cityCode}
+            </if>
+            <if test="cityName != null">
+                and city_name = #{cityName}
+            </if>
+            <if test="districtCode != null">
+                and district_code = #{districtCode}
+            </if>
+            <if test="districtName != null">
+                and district_name = #{districtName}
+            </if>
+            <if test="detail != null">
+                and detail = #{detail}
+            </if>
+            <if test="label != null">
+                and label = #{label}
+            </if>
+            <if test="isDefault != null">
+                and is_default = #{isDefault}
+            </if>
+        </where>
+    </select>
+
+    <select id="getDefault" resultType="com.sky.entity.AddressBook">
+        select * from address_book
+        where user_id = #{userId}
+        and is_default = 1
+    </select>
+    <select id="getById" resultType="com.sky.entity.AddressBook">
+        select * from address_book
+        where id = #{id}
+    </select>
+</mapper>
