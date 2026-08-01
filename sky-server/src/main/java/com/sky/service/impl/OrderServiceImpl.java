@@ -3,6 +3,7 @@ package com.sky.service.impl;
 
 import com.sky.constant.MessageConstant;
 import com.sky.context.BaseContext;
+import com.sky.dto.OrdersPaymentDTO;
 import com.sky.dto.OrdersSubmitDTO;
 import com.sky.entity.AddressBook;
 import com.sky.entity.OrderDetail;
@@ -13,6 +14,7 @@ import com.sky.mapper.OrderDetailMapper;
 import com.sky.mapper.OrderMapper;
 import com.sky.mapper.ShoppingCartMapper;
 import com.sky.service.OrderService;
+import com.sky.vo.OrderPaymentVO;
 import com.sky.vo.OrderSubmitVO;
 import org.apache.http.MessageConstraintException;
 import org.springframework.beans.BeanUtils;
@@ -92,5 +94,29 @@ public class OrderServiceImpl implements OrderService {
                 .build();
         
         return orderSubmitVO;
+    }
+
+    @Override
+    public OrderPaymentVO payment(OrdersPaymentDTO ordersPaymentDTO) {
+        // 1. 根据订单号查订单
+        Orders orders = orderMapper.getByNumber(ordersPaymentDTO.getOrderNumber());
+        if (orders == null) {
+            throw new RuntimeException("订单不存在");
+        }
+
+        // 2. 模拟支付成功（直接改状态）
+        orders.setStatus(Orders.PAID);
+        orders.setPayStatus(Orders.PAID);
+        orders.setCheckoutTime(LocalDateTime.now());
+        orderMapper.update(orders);
+
+        // 3. 返回模拟结果
+        return OrderPaymentVO.builder()
+                .nonceStr(String.valueOf(System.currentTimeMillis()))
+                .paySign("mock_pay_sign")
+                .timeStamp(String.valueOf(System.currentTimeMillis() / 1000))
+                .signType("RSA")
+                .packageStr("prepay_id=mock_" + System.currentTimeMillis())
+                .build();
     }
 }

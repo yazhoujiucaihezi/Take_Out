@@ -10,4 +10,15 @@
             #{phone}, #{address}, #{userName}, #{consignee}, #{cancelReason}, #{rejectionReason}, #{cancelTime}, #{estimatedDeliveryTime},
             #{deliveryStatus}, #{deliveryTime}, #{packAmount}, #{tablewareNumber}, #{tablewareStatus})
     </insert>
+
+
+    <update id="update">
+            update orders
+            <set>
+                <if test="status != null">status = #{status},</if>
+                <if test="payStatus != null">pay_status = #{payStatus},</if>
+                <if test="checkoutTime != null">checkout_time = #{checkoutTime},</if>
+            </set>
+            where id = #{id}
+    </update>
 </mapper>
