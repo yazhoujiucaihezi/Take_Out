@@ -54,3 +54,9 @@ sky:
   wechat:
     appid: ${sky.wechat.appid}
     secret: ${sky.wechat.secret}
+
+  shop:
+    address: 广州市天河区广州塔
+
+  baidu:
+    ak: WaNY07VD85ZEEFMW5oe9XyD1KHFoxqlY
