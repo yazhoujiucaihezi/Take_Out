@@ -10,6 +10,7 @@ import org.apache.ibatis.annotations.Select;
 import org.springframework.core.annotation.Order;
 import org.springframework.data.domain.Sort;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Mapper
@@ -31,4 +32,13 @@ public interface OrderMapper {
 
     @Select("select count(id) from orders where status = #{status}")
     Integer countStatus(Integer confirmed);
+
+    /**
+     * 根据状态和订单时间查询订单
+     * @param status
+     * @param time
+     * @return
+     */
+    @Select("select * from orders where status = #{status} and order_time < #{time}")
+    List<Orders> getByStatusAndOrderTimeLT(Integer status, LocalDateTime time);
 }
