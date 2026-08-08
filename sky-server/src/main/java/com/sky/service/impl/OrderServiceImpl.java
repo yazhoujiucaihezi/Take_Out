@@ -25,6 +25,7 @@ import com.sky.vo.OrderPaymentVO;
 import com.sky.vo.OrderStatisticsVO;
 import com.sky.vo.OrderSubmitVO;
 import com.sky.vo.OrderVO;
+import com.sky.websocket.WebSocketServer;
 import org.springframework.beans.factory.annotation.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -55,7 +56,8 @@ public class OrderServiceImpl implements OrderService {
     private AddressBookMapper addressBookMapper;
     @Autowired
     private ShoppingCartMapper shoppingCartMapper;
-
+    @Autowired
+    private WebSocketServer webSocketServer;
 
     /**
      * 用户下单
@@ -141,6 +143,15 @@ public class OrderServiceImpl implements OrderService {
         orders.setCheckoutTime(LocalDateTime.now());
         log.info("订单 id: {}", orders.getId());
         orderMapper.update(orders);
+
+        //通过websocket向客户端浏览器推送消息
+        Map map = new HashMap();
+        map.put("type", 1); //1表示来单提醒,2表示客户催单
+        map.put("orderId", orders.getId());
+        map.put("content", "订单号:" + orders.getNumber() + "已支付");
+
+        String json = JSON.toJSONString(map);
+        webSocketServer.sendToAllClient(json);
 
         // 3. 返回模拟结果
         return OrderPaymentVO.builder()
