@@ -1,0 +1,40 @@
+package com.sky.controller.admin;
+
+import com.sky.result.Result;
+import com.sky.service.ReportService;
+import com.sky.vo.TurnoverReportVO;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.time.LocalDate;
+
+@RestController
+@RequestMapping("/admin/report")
+@Api(tags = "报表相关接口")
+@Slf4j
+public class ReportController {
+
+    @Autowired
+    private ReportService reportService;
+
+    /**
+     * 统计指定时间区间内的营业额数据
+     * @param begin
+     * @param end
+     * @return
+     */
+    @GetMapping("/turnoverStatistics")
+    @ApiOperation("获取营业额统计数据")
+    public Result<TurnoverReportVO> turnoverStatistics(
+            @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate begin,
+            @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate end) {
+        log.info("获取营业额统计数据");
+        return Result.success(reportService.getTurnoverStatistics(begin, end));
+    }
+}
