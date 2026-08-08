@@ -318,6 +318,10 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void complete(Long id) {
         Orders orders = orderMapper.getById(id);
+        if(orders == null || orders.getStatus() == Orders.DELIVERY_IN_PROGRESS){
+            throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
+        }
+
         if(orders.getStatus() == Orders.DELIVERY_IN_PROGRESS){
             orders.setStatus(Orders.COMPLETED);
             orderMapper.update(orders);
@@ -327,6 +331,18 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void reminder(Long id) {
         Orders orders = orderMapper.getById(id);
+
+        if(orders == null){
+            throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
+        }
+
+        Map map = new HashMap();
+        map.put("type", 2);
+        map.put("orderId", orders.getId());
+        map.put("content", "订单号:" + orders.getNumber() + "已确认");
+        String json = JSON.toJSONString(map);
+
+        webSocketServer.sendToAllClient(json);
     }
 
     /**
