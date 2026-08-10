@@ -49,6 +49,7 @@
         </where>
         order by order_time desc
     </select>
+
     <select id="Serach4admin" resultType="com.sky.entity.Orders">
         select * from orders
         <where>
@@ -70,13 +71,14 @@
         </where>
         order by order_time desc
     </select>
+
     <select id="sumByMap" resultType="java.lang.Double">
         select sum(amount) from orders
         <where>
-            <if test="begin != null">
+            <if test="beginTime != null">
                and order_time &gt;= #{beginTime}
             </if>
-            <if test="end != null">
+            <if test="endTime != null">
                and order_time &lt;= #{endTime}
             </if>
             <if test="status != null">
